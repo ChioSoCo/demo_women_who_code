@@ -21,11 +21,6 @@ pipeline {
         }
         stash includes: 'angularapp.tar', name: 'app' 
         }
-        post {
-        unstable {
-          echo 'Execution failed'
-        }//unstable
-      }//post
     }//stage
     
     stage('Build App') {
@@ -37,17 +32,34 @@ pipeline {
         unstash 'app'
         script {
           sh "ls -lha"
-          sh "tar -xf angularapp.tar"
-          sh "ls -lha '${WORKSPACE}'/angular-todo-app"
-          sh "ls -lha angular-todo-app"
-          sh "docker run --name Angular -v '${WORKSPACE}'/angu:/Angular --rm myangular:v2.1 sh -c 'cd /Angular; pwd; ls -lha'"
+          sh """
+          docker run -d --name Angular teracy/angular-cli sleep infinity
+          docker cp /var/jenkins_home/workspace/gular_app_feature_jenkinsfile_02/angular-todo-app Angular:/tmp
+          docker exec -i Angular sh -c "cd /tmp/angular-todo-app; ls -lha; nom install; ng build; ls -lha”
+          docker exec -i Angular sh -c "cd /tmp/angular-todo-app; tar -cf builded_app.tar dist/”
+          docker cp Angular:/tmp/angular-todo-app/builded_app.tar .
+          """
         }
+        stash includes: 'builded_app.tar', name: 'buildedapp' 
+      }
+    }//stage
+    
+    stage('Deploy A') {
+      options { skipDefaultCheckout() }
+      when {
+      	anyOf { branch 'feature/*' }
+      }
+      steps {
+        unstash 'buildedapp'
+        script {
+          sh "ls -lha"
+          sh """
+          docker cp builded_app.tar Nginx:/usr/share/nginx/html
+          docker exec -i Nginx sh -c "cd /usr/share/nginx/html; tar -xf builded_app.tar; mv dist/index.hmtl ." 
+          docker restart Nginx
+          """
         }
-        post {
-        unstable {
-          echo 'Execution failed'
-        }//unstable
-      }//post
+      }
     }//stage
 
   }//stages
