@@ -16,7 +16,7 @@ pipeline {
       steps {
         script {
           sh "git clone '${repoUrl}'"
-          sh "docker exec -it
+          sh "docker ps -a"
         }
         }
         post {
