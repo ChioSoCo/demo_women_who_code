@@ -14,11 +14,12 @@ pipeline {
       	anyOf { branch 'feature/*' }
       }
       steps {
+        deleteDir()
         script {
           sh "git clone '${repoUrl}'"
           sh "ls -lha"
           sh "docker ps -a"
-          sh "tar -cvf angularapp.tar demo_women_who_code/"
+          sh "tar -cvf angularapp.tar angular-todo-app/"
         }
         stash includes: 'angularapp.tar', name: 'app' 
         }
