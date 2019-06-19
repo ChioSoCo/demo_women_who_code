@@ -31,10 +31,10 @@ pipeline {
       steps {
         unstash 'app'
         script {
-          sh "ls -lha"
           sh """
+          tar -xf angularapp.tar
           docker run -d --name Angular teracy/angular-cli sleep infinity
-          docker cp /var/jenkins_home/workspace/gular_app_feature_jenkinsfile_02/angular-todo-app Angular:/tmp
+          docker cp '${WORKSPACE}'/angular-todo-app Angular:/tmp
           docker exec -i Angular sh -c "cd /tmp/angular-todo-app; ls -lha; nom install; ng build; ls -lha”
           docker exec -i Angular sh -c "cd /tmp/angular-todo-app; tar -cf builded_app.tar dist/”
           docker cp Angular:/tmp/angular-todo-app/builded_app.tar .
