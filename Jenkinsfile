@@ -57,7 +57,7 @@ pipeline {
           sh "ls -lha"
           sh """
           docker cp builded_app.tar Nginx:/usr/share/nginx/html
-          docker exec -i Nginx sh -c "cd /usr/share/nginx/html; tar -xf builded_app.tar; mv dist/index.hmtl ." 
+          docker exec -i Nginx sh -c "cd /usr/share/nginx/html; tar -xf builded_app.tar; mv dist/index.html ." 
           docker restart Nginx
           """
         }
