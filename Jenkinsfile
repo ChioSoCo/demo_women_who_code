@@ -35,7 +35,7 @@ pipeline {
           tar -xf angularapp.tar
           docker run -d --name Angular teracy/angular-cli sleep infinity
           docker cp '${WORKSPACE}'/angular-todo-app Angular:/tmp
-          docker exec -i Angular sh -c "cd /tmp/angular-todo-app; ls -lha; nom install; ng build; ls -lha”
+          docker exec -i Angular sh -c "cd /tmp/angular-todo-app; ls -lha; npm install; ng build; ls -lha”
           docker exec -i Angular sh -c "cd /tmp/angular-todo-app; tar -cf builded_app.tar dist/”
           docker cp Angular:/tmp/angular-todo-app/builded_app.tar .
           docker stop Angular
