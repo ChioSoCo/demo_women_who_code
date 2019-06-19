@@ -38,6 +38,8 @@ pipeline {
           docker exec -i Angular sh -c "cd /tmp/angular-todo-app; ls -lha; nom install; ng build; ls -lha”
           docker exec -i Angular sh -c "cd /tmp/angular-todo-app; tar -cf builded_app.tar dist/”
           docker cp Angular:/tmp/angular-todo-app/builded_app.tar .
+          docker stop Angular
+          docker rm Angular
           """
         }
         stash includes: 'builded_app.tar', name: 'buildedapp' 
