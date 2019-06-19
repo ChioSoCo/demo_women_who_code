@@ -16,7 +16,28 @@ pipeline {
       steps {
         script {
           sh "git clone '${repoUrl}'"
+          sh "ls -lha"
           sh "docker ps -a"
+          sh "tar -cvf angularapp.tar demo_women_who_code/"
+        }
+        stash include: 'angularapp.tar', name: 'app' 
+        }
+        post {
+        unstable {
+          echo 'Execution failed'
+        }//unstable
+      }//post
+    }//stage
+    
+    stage('Build App') {
+      options { skipDefaultCheckout() }
+      when {
+      	anyOf { branch 'feature/*' }
+      }
+      steps {
+        unstash 'app'
+        script {
+          sh "ls -lha"
         }
         }
         post {
