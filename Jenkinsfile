@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    repoUrl='https://github.com/ChioSoCo/angular-todo-app.git'
+    repoUrl='https://github.com/ChioSoCo/ngx-behance.git'
   }
   agent any
   options {
@@ -17,7 +17,7 @@ pipeline {
         deleteDir()
         script {
           sh "git clone '${repoUrl}'"
-          sh "tar -cf angularapp.tar angular-todo-app/"
+          sh "tar -cf angularapp.tar ngx-behance/"
         }
         stash includes: 'angularapp.tar', name: 'app' 
         }
@@ -34,12 +34,11 @@ pipeline {
           sh """
           tar -xf angularapp.tar
           docker run -d --name Angular teracy/angular-cli sleep infinity
-          docker cp '${WORKSPACE}'/angular-todo-app Angular:/tmp
-          docker exec -i Angular sh -c "cd /tmp/angular-todo-app; ls -lha; npm install; ng build; ls -lha"
-          docker exec -i Angular sh -c "cd /tmp/angular-todo-app; tar -cf builded_app.tar dist/"
-          docker cp Angular:/tmp/angular-todo-app/builded_app.tar .
-          docker stop Angular
-          docker rm Angular
+          docker cp '${WORKSPACE}'/ngx-behance Angular:/tmp
+          docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha; npm install; ng build; ls -lha"
+          docker exec -i Angular sh -c "cd /tmp/ngx-behance; tar -cf builded_app.tar dist/"
+          docker cp Angular:/tmp/ngx-behance/builded_app.tar .
+          docker rm -f Angular
           """
         }
         stash includes: 'builded_app.tar', name: 'buildedapp' 
@@ -57,7 +56,7 @@ pipeline {
           sh "ls -lha"
           sh """
           docker cp builded_app.tar Nginx:/usr/share/nginx/html
-          docker exec -i Nginx sh -c "cd /usr/share/nginx/html; tar -xf builded_app.tar; mv dist/index.html ." 
+          docker exec -i Nginx sh -c "cd /usr/share/nginx/html; tar -xf builded_app.tar; mv dist/ngx-behance/* ." 
           docker restart Nginx
           """
         }
