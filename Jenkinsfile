@@ -1,4 +1,7 @@
 pipeline {
+  environment {
+    repoUrl='https://github.com/ChioSoCo/angular-todo-app.git',
+  }
   agent any
   options {
     timeout(time: 1, unit: 'HOURS')
@@ -12,7 +15,8 @@ pipeline {
       }
       steps {
         script {
-            sh "ls -lha"
+          sh "git clone '${repoUrl}'"
+          sh "docker exec -it
         }
         }
         post {
