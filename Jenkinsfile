@@ -20,7 +20,7 @@ pipeline {
           sh "docker ps -a"
           sh "tar -cvf angularapp.tar demo_women_who_code/"
         }
-        stash include: 'angularapp.tar', name: 'app' 
+        stash includes: 'angularapp.tar', name: 'app' 
         }
         post {
         unstable {
