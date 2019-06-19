@@ -39,8 +39,9 @@ pipeline {
         unstash 'app'
         script {
           sh "ls -lha"
+          sh "tar -xvf angularapp.tar"
           sh """
-              docker run --name Angular -v '${WORKSPACE}'/angular-todo-app:/home/circleci/Angular -it myangular:v1.1 
+              docker run --name Angular -v '${WORKSPACE}'/angular-todo-app:/home/circleci/Angular -i myangular:v1.1 
               cd Angular
               npm install
               #ng version
