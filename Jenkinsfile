@@ -40,19 +40,7 @@ pipeline {
         script {
           sh "ls -lha"
           sh "tar -xvf angularapp.tar"
-          sh """
-              docker run --name Angular -v '${WORKSPACE}'/angular-todo-app:/home/circleci/Angular -i myangular:v1.1 | pwd | ls -lha
-              pwd
-              ls -lha
-              cd Angular
-              npm install
-              #ng version
-              ng build
-              exit
-              ls -lha angular-todo-app/
-              docker rm Angular
-              docker ps -a
-              """
+          sh "docker run --name Angular -v '${WORKSPACE}'angular-todo-app:/Angular --rm myangular:v2.0 sh -c 'cd Angular; npm install; ng build Angular'"
         }
         }
         post {
