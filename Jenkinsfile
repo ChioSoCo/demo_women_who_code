@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    repoUrl='https://github.com/ChioSoCo/angular-todo-app.git',
+    repoUrl='https://github.com/ChioSoCo/angular-todo-app.git'
   }
   agent any
   options {
