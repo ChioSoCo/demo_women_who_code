@@ -37,9 +37,10 @@ pipeline {
         unstash 'app'
         script {
           sh "ls -lha"
-          sh "mkdir angu"
-          sh "mv angularapp.tar angu/"
-          sh "docker run --name Angular -v '${WORKSPACE}'/angu:/Angular --rm myangular:v2.1 sh -c 'cd /Angular; pwd; ls -lha; tar -xf angularapp.tar; ls -lha'"
+          sh "tar -xf angularapp.tar"
+          sh "ls -lha '${WORKSPACE}'/angular-todo-app"
+          sh "ls -lha angular-todo-app"
+          sh "docker run --name Angular -v '${WORKSPACE}'/angu:/Angular --rm myangular:v2.1 sh -c 'cd /Angular; pwd; ls -lha'"
         }
         }
         post {
