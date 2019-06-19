@@ -39,6 +39,17 @@ pipeline {
         unstash 'app'
         script {
           sh "ls -lha"
+          sh """
+              docker run --name Angular -v '${WORKSPACE}'/angular-todo-app:/home/circleci/Angular -it myangular:v1.1 
+              cd Angular
+              npm install
+              #ng version
+              ng build
+              exit
+              ls -lha angular-todo-app/
+              docker rm Angular
+              docker ps -a
+              """
         }
         }
         post {
