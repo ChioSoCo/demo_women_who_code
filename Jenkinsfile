@@ -40,7 +40,7 @@ pipeline {
           sh "tar -xf angularapp.tar"
           sh "ls -lha '${WORKSPACE}'/angular-todo-app"
           sh "ls -lha angular-todo-app"
-          sh "docker run --name Angular -v '${WORKSPACE}'/angular-todo-app:/Angular --rm myangular:v2.0 sh -c 'cd /Angular; pwd; ls -lha'"
+          sh "docker run --name Angular -v '${WORKSPACE}'/angular-todo-app:/Angular --rm myangular:v2.1 sh -c 'cd /Angular; pwd; ls -lha'"
         }
         }
         post {
