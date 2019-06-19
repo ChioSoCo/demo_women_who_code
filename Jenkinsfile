@@ -17,9 +17,7 @@ pipeline {
         deleteDir()
         script {
           sh "git clone '${repoUrl}'"
-          sh "ls -lha"
-          sh "docker ps -a"
-          sh "tar -cvf angularapp.tar angular-todo-app/"
+          sh "tar -cf angularapp.tar angular-todo-app/"
         }
         stash includes: 'angularapp.tar', name: 'app' 
         }
@@ -39,8 +37,8 @@ pipeline {
         unstash 'app'
         script {
           sh "ls -lha"
-          sh "tar -xvf angularapp.tar"
-          sh "docker run --name Angular -v '${WORKSPACE}'/angular-todo-app:/Angular --rm myangular:v2.0 sh -c 'cd /Angular; npm install; ng build '"
+          sh "tar -xf angularapp.tar"
+          sh "docker run --name Angular -v '${WORKSPACE}'/angular-todo-app:/Angular --rm myangular:v2.0 sh -c 'cd /Angular; pwd; ls -lha'"
         }
         }
         post {
