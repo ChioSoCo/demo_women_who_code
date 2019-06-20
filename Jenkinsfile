@@ -26,7 +26,7 @@ pipeline {
     stage('Build App') {
       options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'master }
+      	anyOf { branch 'master' }
       }
       steps {
         unstash 'app'
