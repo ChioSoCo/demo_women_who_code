@@ -63,7 +63,7 @@ pipeline {
       }
     }//stage
     
-    stage('Deploy B') {
+    stage('Deploy to B approval') {
       options { skipDefaultCheckout() }
       when {
       	anyOf { branch 'feature/*' }
@@ -76,7 +76,18 @@ pipeline {
             env.INPUT_PARAMS = input message: 'Deploy to region B', ok: 'Deploy',
          		env.TYPE_TEST = env.INPUT_PARAMS
           }//timeout
-          
+        }
+      }
+    }//stage
+    
+    stage('Deploy B') {
+      options { skipDefaultCheckout() }
+      when {
+      	anyOf { branch 'feature/*' }
+      }
+      steps {
+        unstash 'buildedapp'
+        script {
           sh "ls -lha"
           sh """
           docker cp builded_app.tar Nginx2:/usr/share/nginx/html
