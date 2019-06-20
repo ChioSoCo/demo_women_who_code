@@ -73,7 +73,7 @@ pipeline {
         script {
           timeout(time: 5, unit: 'MINUTES') {
             // Show the select input modal
-            env.INPUT_PARAMS = input message: 'Deploy to region B', ok: 'Deploy',
+            env.INPUT_PARAMS = input message: 'Deploy to region B', ok: 'Deploy'
          		env.TYPE_TEST = env.INPUT_PARAMS
           }//timeout
         }
