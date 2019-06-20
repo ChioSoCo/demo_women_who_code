@@ -11,7 +11,7 @@ pipeline {
     stage('SCM') {
       //options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'feature/*' }
+      	anyOf { branch 'master' }
       }
       steps {
         //deleteDir()
@@ -26,7 +26,7 @@ pipeline {
     stage('Build App') {
       options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'feature/*' }
+      	anyOf { branch 'master }
       }
       steps {
         unstash 'app'
@@ -48,7 +48,7 @@ pipeline {
     stage('Deploy A') {
       options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'feature/*' }
+      	anyOf { branch 'master' }
       }
       steps {
         unstash 'buildedapp'
@@ -66,7 +66,7 @@ pipeline {
     stage('Deploy B') {
       options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'feature/*' }
+      	anyOf { branch 'master' }
       }
       steps {
         unstash 'buildedapp'
@@ -92,7 +92,7 @@ pipeline {
     post {
        always {
         script {
-          sh "echo 'The execution'"
+          sh "echo 'The execution has finished'"
          }//script
        }
   }
