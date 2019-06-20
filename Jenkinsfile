@@ -1,7 +1,7 @@
 pipeline {
-  environment {
-    repoUrl='https://github.com/ChioSoCo/ngx-behance.git'
-  }
+  //environment {
+    //repoUrl='https://github.com/ChioSoCo/ngx-behance.git'
+  //}
   agent any
   options {
     timeout(time: 1, unit: 'HOURS')
@@ -9,14 +9,14 @@ pipeline {
 
   stages {
     stage('SCM') {
-      options { skipDefaultCheckout() }
+      //options { skipDefaultCheckout() }
       when {
       	anyOf { branch 'feature/*' }
       }
       steps {
         deleteDir()
         script {
-          sh "git clone '${repoUrl}'"
+          //sh "git clone '${repoUrl}'"
           sh "tar -cf angularapp.tar ngx-behance/"
         }
         stash includes: 'angularapp.tar', name: 'app' 
