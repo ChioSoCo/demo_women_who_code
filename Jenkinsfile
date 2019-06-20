@@ -14,7 +14,7 @@ pipeline {
       	anyOf { branch 'feature/*' }
       }
       steps {
-        deleteDir()
+        //deleteDir()
         script {
           //sh "git clone '${repoUrl}'"
           sh "tar -cf angularapp.tar ngx-behance/"
