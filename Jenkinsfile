@@ -62,6 +62,30 @@ pipeline {
         }
       }
     }//stage
+    
+    stage('Deploy B') {
+      options { skipDefaultCheckout() }
+      when {
+      	anyOf { branch 'feature/*' }
+      }
+      steps {
+        unstash 'buildedapp'
+        script {
+          timeout(time: 5, unit: 'MINUTES') {
+            // Show the select input modal
+            env.INPUT_PARAMS = input message: 'Deploy to region B', ok: 'Deploy',
+         		env.TYPE_TEST = env.INPUT_PARAMS
+          }//timeout
+          
+          sh "ls -lha"
+          sh """
+          docker cp builded_app.tar Nginx2:/usr/share/nginx/html
+          docker exec -i Nginx2 sh -c "cd /usr/share/nginx/html; tar -xf builded_app.tar; mv dist/ngx-behance/* ." 
+          docker restart Nginx2
+          """
+        }
+      }
+    }//stage
 
   }//stages
 
