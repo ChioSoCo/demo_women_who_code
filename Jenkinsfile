@@ -11,7 +11,7 @@ pipeline {
     stage('SCM') {
       //options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'master' }
+      	anyOf { branch 'dev' }
       }
       steps {
         //deleteDir()
@@ -26,7 +26,7 @@ pipeline {
     stage('Build App') {
       options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'master' }
+      	anyOf { branch 'dev' }
       }
       steps {
         unstash 'app'
@@ -48,7 +48,7 @@ pipeline {
     stage('Deploy A') {
       options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'master' }
+      	anyOf { branch 'dev' }
       }
       steps {
         unstash 'buildedapp'
@@ -66,7 +66,7 @@ pipeline {
     stage('Deploy B') {
       options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'master' }
+      	anyOf { branch 'dev' }
       }
       steps {
         unstash 'buildedapp'
