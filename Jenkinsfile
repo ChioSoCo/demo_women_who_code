@@ -45,9 +45,11 @@ pipeline {
              """
           } catch (err) {
             echo "something failed"
-            docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
-            docker exec -i Angular sh -c "cd /tmp/; tar -cf logs.tar /tmp/*"
-            docker cp Angular:/tmp/logs.tar .
+            sh """
+              docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
+              docker exec -i Angular sh -c "cd /tmp/; tar -cf logs.tar /tmp/*"
+              docker cp Angular:/tmp/logs.tar .
+            """
             archiveArtifacts artifacts: 'logs.tar'
           }          
         }
