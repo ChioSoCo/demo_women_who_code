@@ -37,7 +37,7 @@ pipeline {
               tar -xf angularapp.tar
               docker run -d --name Angular teracy/angular-cli sleep infinity
               docker cp '${WORKSPACE}'/ngx-behance Angular:/tmp
-              docker exec -i Angular sh -c "npm install"
+              docker exec -i Angular sh -c "cd /tmp/ngx-behance; npm install"
               docker exec -i Angular sh -c "cd /tmp/ngx-behance; ng test"
               docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
               docker exec -i Angular sh -c "cd /tmp/; tar -cf logs.tar /tmp/*"
