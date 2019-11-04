@@ -32,6 +32,7 @@ pipeline {
         unstash 'app'
         script {
           sh """
+          docker rm -f Angular
           tar -xf angularapp.tar
           docker run -d --name Angular teracy/angular-cli sleep infinity
           docker cp '${WORKSPACE}'/ngx-behance Angular:/tmp
