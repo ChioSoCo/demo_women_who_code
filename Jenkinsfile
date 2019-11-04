@@ -39,8 +39,8 @@ pipeline {
           docker exec -i Angular sh -c "cd /tmp/ngx-behance; ng test"
           docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
           docker rm -f Angular
-          cat /tmp/ng-2qw6wZ/angular-errors.log
           """
+          archiveArtifacts artifacts: '/tmp/*'
         }
       }
     }//stage
