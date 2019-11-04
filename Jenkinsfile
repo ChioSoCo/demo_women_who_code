@@ -31,16 +31,20 @@ pipeline {
       steps {
         unstash 'app'
         script {
-          sh """
-          docker rm -f Angular
-          tar -xf angularapp.tar
-          docker run -d --name Angular teracy/angular-cli sleep infinity
-          docker cp '${WORKSPACE}'/ngx-behance Angular:/tmp
-          docker exec -i Angular sh -c "cd /tmp/ngx-behance; ng test"
-          docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
-          docker rm -f Angular
-          """
-          archiveArtifacts artifacts: '/tmp/*'
+          try {
+            sh """
+              docker rm -f Angular
+              tar -xf angularapp.tar
+              docker run -d --name Angular teracy/angular-cli sleep infinity
+              docker cp '${WORKSPACE}'/ngx-behance Angular:/tmp
+              docker exec -i Angular sh -c "cd /tmp/ngx-behance; ng test"
+              docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
+              docker rm -f Angular
+             """
+          } catch (err) {
+            echo "something failed"
+            archiveArtifacts artifacts: '/tmp/*'
+          }          
         }
       }
     }//stage
