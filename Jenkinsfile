@@ -39,11 +39,13 @@ pipeline {
               docker cp '${WORKSPACE}'/ngx-behance Angular:/tmp
               docker exec -i Angular sh -c "cd /tmp/ngx-behance; ng test"
               docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
+              docker exec -i Angular sh -c "cd /tmp/; tar -cf logs.tar /tmp/*"
+              docker cp Angular:/tmp/logs.tar .
               docker rm -f Angular
              """
           } catch (err) {
             echo "something failed"
-            archiveArtifacts artifacts: '/tmp/*'
+            archiveArtifacts artifacts: 'logs.tar'
           }          
         }
       }
