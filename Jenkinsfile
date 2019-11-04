@@ -11,7 +11,7 @@ pipeline {
     stage('SCM') {
       //options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'dev' }
+      	anyOf { branch 'feature/include_test' }
       }
       steps {
         //deleteDir()
@@ -23,10 +23,30 @@ pipeline {
         }
     }//stage
     
+    stage('Execute Unit Test') {
+      options { skipDefaultCheckout() }
+      when {
+      	anyOf { branch 'feature/include_test' }
+      }
+      steps {
+        unstash 'app'
+        script {
+          sh """
+          tar -xf angularapp.tar
+          docker run -d --name Angular teracy/angular-cli sleep infinity
+          docker cp '${WORKSPACE}'/ngx-behance Angular:/tmp
+          docker exec -i Angular sh -c "cd /tmp/ngx-behance; ng test"
+          docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
+          docker rm -f Angular
+          """
+        }
+      }
+    }//stage
+    
     stage('Build App') {
       options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'dev' }
+      	anyOf { branch 'feature/include_test' }
       }
       steps {
         unstash 'app'
@@ -48,11 +68,17 @@ pipeline {
     stage('Deploy A') {
       options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'dev' }
+      	anyOf { branch 'feature/include_test' }
       }
       steps {
         unstash 'buildedapp'
         script {
+          timeout(time: 5, unit: 'MINUTES') {
+            // Show the select input modal
+            env.INPUT_PARAMS = input message: 'Deploy to region A?', ok: 'Deploy'
+         		env.TYPE_TEST = env.INPUT_PARAMS
+          }//timeout
+          
           sh "ls -lha"
           sh """
           docker cp builded_app.tar Nginx:/usr/share/nginx/html
@@ -66,14 +92,14 @@ pipeline {
     stage('Deploy B') {
       options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'dev' }
+      	anyOf { branch 'feature/include_test' }
       }
       steps {
         unstash 'buildedapp'
         script {
           timeout(time: 5, unit: 'MINUTES') {
             // Show the select input modal
-            env.INPUT_PARAMS = input message: 'Deploy to region B', ok: 'Deploy'
+            env.INPUT_PARAMS = input message: 'Deploy to region B?', ok: 'Deploy'
          		env.TYPE_TEST = env.INPUT_PARAMS
           }//timeout
           
