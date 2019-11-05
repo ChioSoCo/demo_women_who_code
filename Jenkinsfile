@@ -37,22 +37,20 @@ pipeline {
               docker run -d --name Angular teracy/angular-cli sleep infinity
               docker cp '${WORKSPACE}'/ngx-behance Angular:/tmp
               docker exec -i Angular sh -c "cd /tmp/ngx-behance; npm install"
-              docker exec -i Angular sh -c "cd /tmp/ngx-behance; ng test"
+              docker exec -i Angular sh -c "cd /tmp/ngx-behance; ng test >> testlogs.log"
               docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
-              docker exec -i Angular sh -c "cd /tmp/; tar -cf testlogs.tar /tmp/*"
-              docker cp Angular:/tmp/testlogs.tar .
+              docker cp Angular:/tmp/ngx-behance/testlogs.log .
               docker rm -f Angular
              """
-            archiveArtifacts artifacts: 'testlogs.tar'
+            archiveArtifacts artifacts: 'testlogs.log'
           } catch (err) {
             echo "something failed"
             sh """
               docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
-              docker exec -i Angular sh -c "cd /tmp/; tar -cf testlogs.tar /tmp/*"
-              docker cp Angular:/tmp/testlogs.tar .
+              docker cp Angular:/tmp/ngx-behance/testlogs.log .
               docker rm -f Angular
             """
-            archiveArtifacts artifacts: 'testlogs.tar'
+            archiveArtifacts artifacts: 'testlogs.log'
           }          
         }
       }
