@@ -33,7 +33,6 @@ pipeline {
         script {
           try {
             sh """
-              docker rm -f Angular
               tar -xf angularapp.tar
               docker run -d --name Angular teracy/angular-cli sleep infinity
               docker cp '${WORKSPACE}'/ngx-behance Angular:/tmp
@@ -51,6 +50,7 @@ pipeline {
               docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
               docker exec -i Angular sh -c "cd /tmp/; tar -cf testlogs.tar /tmp/*"
               docker cp Angular:/tmp/testlogs.tar .
+              docker rm -f Angular
             """
             archiveArtifacts artifacts: 'testlogs.tar'
           }          
