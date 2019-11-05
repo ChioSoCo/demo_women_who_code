@@ -11,7 +11,7 @@ pipeline {
     stage('SCM') {
       //options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'feature/include_test' }
+      	anyOf { branch 'dev' }
       }
       steps {
         //deleteDir()
@@ -26,7 +26,7 @@ pipeline {
     stage('Execute Unit Test') {
       options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'feature/include_test' }
+      	anyOf { branch 'dev' }
       }
       steps {
         unstash 'app'
@@ -59,7 +59,7 @@ pipeline {
     stage('Build App') {
       options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'feature/include_test' }
+      	anyOf { branch 'dev' }
       }
       steps {
         unstash 'app'
@@ -81,7 +81,7 @@ pipeline {
     stage('Deploy A') {
       options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'feature/include_test' }
+      	anyOf { branch 'dev' }
       }
       steps {
         unstash 'buildedapp'
@@ -105,7 +105,7 @@ pipeline {
     stage('Deploy B') {
       options { skipDefaultCheckout() }
       when {
-      	anyOf { branch 'feature/include_test' }
+      	anyOf { branch 'dev' }
       }
       steps {
         unstash 'buildedapp'
