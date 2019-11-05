@@ -40,18 +40,19 @@ pipeline {
               docker exec -i Angular sh -c "cd /tmp/ngx-behance; npm install"
               docker exec -i Angular sh -c "cd /tmp/ngx-behance; ng test"
               docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
-              docker exec -i Angular sh -c "cd /tmp/; tar -cf logs.tar /tmp/*"
-              docker cp Angular:/tmp/logs.tar .
+              docker exec -i Angular sh -c "cd /tmp/; tar -cf testlogs.tar /tmp/*"
+              docker cp Angular:/tmp/testlogs.tar .
               docker rm -f Angular
              """
+            archiveArtifacts artifacts: 'testlogs.tar'
           } catch (err) {
             echo "something failed"
             sh """
               docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
-              docker exec -i Angular sh -c "cd /tmp/; tar -cf logs.tar /tmp/*"
-              docker cp Angular:/tmp/logs.tar .
+              docker exec -i Angular sh -c "cd /tmp/; tar -cf testlogs.tar /tmp/*"
+              docker cp Angular:/tmp/testlogs.tar .
             """
-            archiveArtifacts artifacts: 'logs.tar'
+            archiveArtifacts artifacts: 'testlogs.tar'
           }          
         }
       }
@@ -131,9 +132,7 @@ pipeline {
 
     post {
        always {
-        script {
-          sh "echo 'The execution has finished'"
-         }//script
+         sh "Pipeline finished"
        }
   }
 }
