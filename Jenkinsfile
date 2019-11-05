@@ -128,9 +128,4 @@ pipeline {
 
   }//stages
 
-    post {
-       always {
-         sh "Pipeline finished"
-       }
-  }
 }
