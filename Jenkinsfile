@@ -23,6 +23,39 @@ pipeline {
         }
     }//stage
     
+    stage('Execute Unit Test') {
+      options { skipDefaultCheckout() }
+      when {
+      	anyOf { branch 'dev' }
+      }
+      steps {
+        unstash 'app'
+        script {
+          try {
+            sh """
+              tar -xf angularapp.tar
+              docker run -d --name Angular teracy/angular-cli sleep infinity
+              docker cp '${WORKSPACE}'/ngx-behance Angular:/tmp
+              docker exec -i Angular sh -c "cd /tmp/ngx-behance; npm install"
+              docker exec -i Angular sh -c "cd /tmp/ngx-behance; ng test >> testlogs.log"
+              docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
+              docker cp Angular:/tmp/ngx-behance/testlogs.log .
+              docker rm -f Angular
+             """
+            archiveArtifacts artifacts: 'testlogs.log'
+          } catch (err) {
+            echo "something failed"
+            sh """
+              docker exec -i Angular sh -c "cd /tmp/ngx-behance; ls -lha"
+              docker cp Angular:/tmp/ngx-behance/testlogs.log .
+              docker rm -f Angular
+            """
+            archiveArtifacts artifacts: 'testlogs.log'
+          }          
+        }
+      }
+    }//stage
+    
     stage('Build App') {
       options { skipDefaultCheckout() }
       when {
@@ -53,6 +86,12 @@ pipeline {
       steps {
         unstash 'buildedapp'
         script {
+          timeout(time: 5, unit: 'MINUTES') {
+            // Show the select input modal
+            env.INPUT_PARAMS = input message: 'Deploy to region A?', ok: 'Deploy'
+         		env.TYPE_TEST = env.INPUT_PARAMS
+          }//timeout
+          
           sh "ls -lha"
           sh """
           docker cp builded_app.tar Nginx:/usr/share/nginx/html
@@ -73,7 +112,7 @@ pipeline {
         script {
           timeout(time: 5, unit: 'MINUTES') {
             // Show the select input modal
-            env.INPUT_PARAMS = input message: 'Deploy to region B', ok: 'Deploy'
+            env.INPUT_PARAMS = input message: 'Deploy to region B?', ok: 'Deploy'
          		env.TYPE_TEST = env.INPUT_PARAMS
           }//timeout
           
@@ -89,11 +128,4 @@ pipeline {
 
   }//stages
 
-    post {
-       always {
-        script {
-          sh "echo 'The execution has finished'"
-         }//script
-       }
-  }
 }
