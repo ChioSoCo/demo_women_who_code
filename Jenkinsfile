@@ -10,9 +10,6 @@ pipeline {
   stages {
     stage('SCM') {
       //options { skipDefaultCheckout() }
-      when {
-      	anyOf { branch 'dev' }
-      }
       steps {
         //deleteDir()
         script {
@@ -25,9 +22,6 @@ pipeline {
     
     stage('Execute Unit Test') {
       options { skipDefaultCheckout() }
-      when {
-      	anyOf { branch 'dev' }
-      }
       steps {
         unstash 'app'
         script {
@@ -58,9 +52,6 @@ pipeline {
     
     stage('Build App') {
       options { skipDefaultCheckout() }
-      when {
-      	anyOf { branch 'dev' }
-      }
       steps {
         unstash 'app'
         script {
@@ -80,9 +71,6 @@ pipeline {
     
     stage('Deploy A') {
       options { skipDefaultCheckout() }
-      when {
-      	anyOf { branch 'dev' }
-      }
       steps {
         unstash 'buildedapp'
         script {
@@ -104,9 +92,6 @@ pipeline {
     
     stage('Deploy B') {
       options { skipDefaultCheckout() }
-      when {
-      	anyOf { branch 'dev' }
-      }
       steps {
         unstash 'buildedapp'
         script {
